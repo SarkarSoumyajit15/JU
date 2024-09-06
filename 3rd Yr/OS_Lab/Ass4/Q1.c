@@ -7,12 +7,12 @@
 #include <stdint.h>
 #include <string.h>
 
-#define FILE_SIZE (8L * 1024L * 1024L * 1024L)  // 8GB file size
-#define FILE_NAME "largefile.bin"
+#define FILE_SIZE (1L * 1024L * 1024L * 1024L)  // 1GB file size
+#define FILE_NAME "largefile"
 
 int main() {
     int fd;
-    uint8_t X, X_read;
+    int X, X_read;
     off_t F;
     void *mapped;
 
@@ -33,6 +33,18 @@ int main() {
         return 1;
     }
 
+
+    //  Memory mapping the file
+    mapped = mmap(NULL, FILE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    if (mapped == MAP_FAILED) {
+        perror("Error mapping file");
+        close(fd);
+        return 1;
+    }
+
+
+
+
     // Infinite loop
     while (1) {
         // Step 1: Generate random value X (0-255)
@@ -42,28 +54,10 @@ int main() {
         F = (off_t) (rand() % FILE_SIZE);
 
         // Step 3: Write the byte X at offset F
-        if (lseek(fd, F, SEEK_SET) == -1) {
-            perror("Error seeking to offset");
-            close(fd);
-            return 1;
-        }
-
-        if (write(fd, &X, 1) != 1) {
-            perror("Error writing byte");
-            close(fd);
-            return 1;
-        }
-
-        // Step 4: Memory-map the file
-        mapped = mmap(NULL, FILE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-        if (mapped == MAP_FAILED) {
-            perror("Error mapping file");
-            close(fd);
-            return 1;
-        }
+        sprintf((uint8_t *)mapped + F, "%d", X);
 
         // Step 5: Read the byte from the same offset
-        X_read = *((uint8_t *)mapped + F);
+        sscanf((uint8_t *)mapped + F, "%d", &X_read);
 
         // Step 6: Verify that the written byte (X) and read byte (X_read) are the same
         if (X != X_read) {
@@ -75,13 +69,14 @@ int main() {
             printf("Verification succeeded at offset 0x%lX: X = %d, X_read = %d\n", (unsigned long)F, X, X_read);
         }
 
-        // Step 7: Unmap the memory
-        if (munmap(mapped, FILE_SIZE) == -1) {
+
+    }
+
+     if (munmap(mapped, FILE_SIZE) == -1) {
             perror("Error unmapping file");
             close(fd);
             return 1;
         }
-    }
 
     // Close the file
     close(fd);
