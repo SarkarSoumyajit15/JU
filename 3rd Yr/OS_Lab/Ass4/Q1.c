@@ -65,8 +65,9 @@ Verification succeeded at offset 0x257757EC: X = 158, X_read = 158
 Verification succeeded at offset 0x9918E40: X = 221, X_read = 221
 
 
-Sample output of sar command : 
-
+Sample output of sar command :- 
+ Get the process id with :     ps aux | grep <running_process(means the output file)>
+ Now check the stat of page faults with  :     watch -n 1 "awk '{print \"Minor faults:\", \$15, \"Major faults:\", \$16}' /proc/<process_ID>/stat"
 */
 
 
