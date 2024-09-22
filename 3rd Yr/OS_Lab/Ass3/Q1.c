@@ -43,9 +43,18 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/wait.h>
+#include <sys/time.h>
+#include <sys/types.h>
 
 #define SOCKET_PATH "unix_socket"
 #define BUFFER_SIZE 1024
+
+long getTimeElapsed()
+{
+    struct timeval timeElapsed;
+    gettimeofday(&timeElapsed, NULL);
+    return timeElapsed.tv_sec * 1000 + timeElapsed.tv_usec / 1000;
+}
 
 void error_exit(const char*);
 void createServer(int *, struct sockaddr_un *);
@@ -60,6 +69,11 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Usage: %s <filename>", argv[0]);
         exit(EXIT_FAILURE);
     }
+
+     int startingTime = getTimeElapsed();
+
+
+
 
     int server_fd, client_fd, connection_fd;
     struct sockaddr_un server_addr, client_addr;
@@ -189,6 +203,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
+
+     int endingTime = getTimeElapsed();
+        // Calculating the round-about time for transferring the file between process1 and process2 and back to process1
+        int totalTimeTaken = endingTime - startingTime;
+
+         printf(">>> The round-about time for transferring the file between process1 and process2 and back to process1 is %d milliseconds\n", totalTimeTaken);
     //}
     // Clean up
     unlink(SOCKET_PATH);
@@ -293,4 +313,5 @@ int compare_files(const char *file1, const char *file2) {
     fclose(f2);
     return 0;
 }
+
             
