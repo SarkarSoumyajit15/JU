@@ -5,19 +5,40 @@
 
 
 void print_processor_info() {
-    char buffer[MAX_LINE_LENGTH];
-
-    // Print Processor Info : 
-    FILE *file = fopen("/proc/cpuinfo", "r");
-    if (file == NULL) {
-        perror("Error opening /proc/cpuinfo");
+    FILE *fp = fopen("/proc/cpuinfo", "r");
+    if (fp == NULL) {
+        perror("Failed to open /proc/cpuinfo");
         return;
     }
-    while(fgets(buffer, sizeof(buffer), file) != NULL) {
-        printf("Processor Information: %s", buffer);
-    }
-    fclose(file);
-}
+
+    char line[256];
+    char vendor_id[256] = {0};
+    char model_name[256] = {0};
+    char cache_size[256] = {0};
+
+    while (fgets(line, sizeof(line), fp)) {
+        if (strstr(line, "vendor_id") != NULL) {
+            sscanf(line, "vendor_id : %[^\n]", vendor_id);
+        } else if (strstr(line, "model name") != NULL) {
+            sscanf(line, "model name : %[^\n]", model_name);
+        } else if (strstr(line, "cache size") != NULL) {
+            sscanf(line, "cache size : %[^\n]", cache_size);
+        }
+
+         //Stop reading if we've found all the required information
+          if (vendor_id[0] && model_name[0] && cache_size[0]) {
+             break;
+          }
+     }
+
+     fclose(fp);
+
+     // Print the collected information
+     printf("Processor Information:\n");
+     printf("Vendor ID: %s\n", vendor_id);
+     printf("Model Name: %s\n", model_name);
+     printf("Cache Size: %s\n", cache_size);
+ }
 
 
 
