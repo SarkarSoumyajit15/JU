@@ -1,3 +1,116 @@
+
+/*
+
+
+Name  :  Soumyajit Sarkar
+Roll No. : 002211001106
+Section A2
+
+
+Assignment Details - Consider a main process which creates three threads Th1, Th2, and Th3. The main process also creates two random quantities (X, Y), both less than 10. These two values will be placed by the main process in the shared memory (One variant of IPC Primitive)  that is accessible by all the three threads Th1, Th2 and Th3. The shared memory will be created by the main process also.  
+
+For each pair of values (X,Y), it is required that some computations will be done by various threads. The thread Th1 will compute A (X*Y) and the thread Th2 will compute B (X*Y)/2). Similarly,  Th3 computes C (X+Y), Th2 again computes D ((X*Y)/(X+Y)), and finally Th1 computes E ((X+Y)(X-Y)). All these values are kept in the shared memory in a tabular fashion as shown below. 
+
+The number of (X,Y) pairs will be taken as an argument from the CLI. It is the responsibility of the main process to populate required numbers of (X,Y)s in the shared memory. The program will only exit when all A,B,C etc. are computed for all given (X,Y) values. Before exiting, all (X,Y)s, As, Bs etc. should be displayed. 
+
+Whenever, the threads complete one phase of computations (A, B, C, D and E), they will go for another pair of (X,Y) values; but they will start all together. This can be achieved by proper synchronization.
+
+Use the proper shell command to display the Shared Memory Status/Info/Statistics and attach this sample output as a comment.
+
+
+
+Input Description  - User must enter the number of (X,Y) pairs to be generated and worked upon
+Output Description - The various stazes of the computation process are printed and the final table 
+                     containing all the relevant data are printed
+
+
+Sample Output : 
+
+root@Ankur:~/OS/Ass7# ./a.out
+Enter the number of pairs to be generated
+3
+Creating 3 threads
+
+Threads created
+
+Main Thread is executing its task
+Inserting all these generated nos in an array
+
+Generating new no.s
+Main thread task : New nos generated  - > finished
+
+
+Now we will work with new (X,Y) pairs : 3.000000 & 6.000000
+
+Thread 1 is executing task 1 :  (X * Y)
+Thread 1 finished task 1
+Thread 2 is executing task  2 : (X * Y)/2
+Thread 2 finished task 2
+Thread 3 is executing task 3 :   (X + Y)
+Thread 3 finished task 3
+Thread 1 is executing task 4 : (X * Y) / (X + Y)
+Thread 1 finished task 4
+Thread 1 is executing task 5 :   (X + Y) * (X - Y)
+Thread 1 finished task 5
+Main Thread is executing its task
+Inserting all these generated nos in an array
+
+Generating new no.s
+Main thread task : New nos generated  - > finished
+
+
+Now we will work with new (X,Y) pairs : 7.000000 & 5.000000
+
+Thread 1 is executing task 1 :  (X * Y)
+Thread 1 finished task 1
+Thread 2 is executing task  2 : (X * Y)/2
+Thread 2 finished task 2
+Thread 3 is executing task 3 :   (X + Y)
+Thread 3 finished task 3
+Thread 1 is executing task 4 : (X * Y) / (X + Y)
+Thread 1 finished task 4
+Thread 1 is executing task 5 :   (X + Y) * (X - Y)
+Thread 1 finished task 5
+Main Thread is executing its task
+Inserting all these generated nos in an array
+
+Generating new no.s
+Main thread task : New nos generated  - > finished
+
+
+Now we will work with new (X,Y) pairs : 3.000000 & 5.000000
+
+Thread 1 is executing task 1 :  (X * Y)
+Thread 1 finished task 1
+Thread 2 is executing task  2 : (X * Y)/2
+Thread 2 finished task 2
+Thread 3 is executing task 3 :   (X + Y)
+Thread 3 finished task 3
+Thread 1 is executing task 4 : (X * Y) / (X + Y)
+Thread 1 finished task 4
+Thread 1 is executing task 5 :   (X + Y) * (X - Y)
+Thread 1 finished task 5
+Main Thread is executing its task
+Inserting all these generated nos in an array
+
+
+
+  ( X     ,      Y ) :                A                 B              C               D               E
+
+
+(  3.000000  ,  6.000000  )  :    18.000000        9.000000        9.000000        2.000000        -27.000000
+
+(  7.000000  ,  5.000000  )  :    35.000000        17.500000        12.000000        2.916667        24.000000
+
+(  3.000000  ,  5.000000  )  :    15.000000        7.500000        8.000000        1.875000        -16.000000
+
+
+
+*/
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
