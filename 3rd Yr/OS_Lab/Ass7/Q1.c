@@ -48,8 +48,8 @@ Thread 2 is executing task  2 : (X * Y)/2
 Thread 2 finished task 2
 Thread 3 is executing task 3 :   (X + Y)
 Thread 3 finished task 3
-Thread 1 is executing task 4 : (X * Y) / (X + Y)
-Thread 1 finished task 4
+Thread 2 is executing task 4 : (X * Y) / (X + Y)
+Thread 2 finished task 4
 Thread 1 is executing task 5 :   (X + Y) * (X - Y)
 Thread 1 finished task 5
 Main Thread is executing its task
@@ -217,10 +217,10 @@ void *thread_2(void *arg)
         }
 
         // Task for thread 2
-        printf("Thread 1 is executing task 4 : (X * Y) / (X + Y) \n");
+        printf("Thread 2 is executing task 4 : (X * Y) / (X + Y) \n");
 
         D = (X * Y) / (X + Y);
-        printf("Thread 1 finished task 4  \n");
+        printf("Thread 2 finished task 4  \n");
 
 
         // Incrementing current_thread to pass the control to perform next task (i.e. task 5);
